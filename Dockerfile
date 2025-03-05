@@ -12,7 +12,9 @@ RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 \
 
 FROM gcr.io/distroless/base:nonroot
 
+USER 0
 RUN mkdir -p /etc/smtprelay
+USER $CONTAINER_USER_ID
 
 COPY --from=0 /workspace/source/smtprelay /usr/local/bin/smtprelay
 
