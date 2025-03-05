@@ -46,6 +46,7 @@ var (
 	command          = flagset.String("command", "", "Path to pipe command")
 	remotesStr       = flagset.String("remotes", "", "Outgoing SMTP servers")
 	strictSender     = flagset.Bool("strict_sender", false, "Use only SMTP servers with Sender matches to From")
+	authWithoutTLS   = flagset.Bool("no_tls_auth", false, "Allow user/password authentication even no Local TLS is enabled")
 
 	// additional flags
 	_           = flagset.String("config", "", "Path to config file (ini format)")
@@ -147,7 +148,7 @@ func setupListeners() {
 	for _, listenAddr := range strings.Split(*listenStr, " ") {
 		pa := splitProto(listenAddr)
 
-		if localAuthRequired() && pa.protocol == "" {
+		if localAuthRequired() && pa.protocol == "" && !*authWithoutTLS {
 			log.WithField("address", pa.address).
 				Fatal("Local authentication (via allowed_users file) " +
 					"not allowed with non-TLS listener")
