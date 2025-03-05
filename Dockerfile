@@ -12,9 +12,11 @@ RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 \
 
 FROM gcr.io/distroless/base:nonroot
 
+RUN mkdir -p /etc/smtprelay
+
 COPY --from=0 /workspace/source/smtprelay /usr/local/bin/smtprelay
 
 # logfile is /dev/null (not /proc/self/fd/1) because logs go to stdout as well
-ENTRYPOINT [ "smtprelay", "-logfile=/dev/null" ]
+ENTRYPOINT [ "smtprelay" ]
 CMD [ "--help" ]
 EXPOSE 25
